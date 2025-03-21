@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <title>Dividir y Colorear Circulo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+      }
+      canvas {
+        border: 1px solid #ccc;
+        margin-top: 20px;
+      }
+      .slider-container {
+        margin: 20px;
+      }
+      label {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dividir y Colorear Circulo</h1>
+    <div class="slider-container">
+      <label for="divisions">Divisiones: <span
+          id="divisionsValue">1</span></label><br>
+      <input type="range" id="divisions" min="1" max="10" value="1">
+    </div>
+    <div class="slider-container">
+      <label for="redPieces">Piezas Rojas: <span
+          id="redPiecesValue">0</span></label><br>
+      <input type="range" id="redPieces" min="0" max="0" value="0">
+    </div>
+    <canvas id="circleCanvas" width="400" height="400"></canvas>
+
+    <script>
+      const canvas = document.getElementById('circleCanvas');
+      const ctx = canvas.getContext('2d');
+      const divisionsSlider = document.getElementById('divisions');
+      const redPiecesSlider = document.getElementById('redPieces');
+      const divisionsValueSpan = document.getElementById('divisionsValue');
+      const redPiecesValueSpan = document.getElementById('redPiecesValue');
+
+      function drawCircle() {
+        // Limpiar el canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Centro y radio del circulo
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 150;
+        const divisions = parseInt(divisionsSlider.value);
+        const redPieces = parseInt(redPiecesSlider.value);
+
+        // Dibujar circulo exterior
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        // Si hay solo 1 división, es el círculo completo
+        if(divisions === 1) {
+          if(redPieces > 0) {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = "red";
+            ctx.fill();
+          }
+        } else {
+          const angleStep = (2 * Math.PI) / divisions;
+          for(let i = 0; i < divisions; i++){
+            const startAngle = i * angleStep;
+            const endAngle = startAngle + angleStep;
+
+            // Si el sector está dentro de los seleccionados para colorear, se pinta en rojo.
+            if(i < redPieces) {
+              ctx.beginPath();
+              ctx.moveTo(centerX, centerY);
+              ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+              ctx.closePath();
+              ctx.fillStyle = "red";
+              ctx.fill();
+            }
+
+            // Dibujar línea divisoria
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + radius * Math.cos(startAngle), centerY + radius * Math.sin(startAngle));
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Actualiza el deslizador de piezas rojas para que su maximo coincida con las divisiones actuales,
+      // y actualiza el label de forma incondicional.
+      function updateRedPiecesSlider() {
+        const divisions = parseInt(divisionsSlider.value);
+        redPiecesSlider.max = divisions;
+        if(parseInt(redPiecesSlider.value) > divisions) {
+          redPiecesSlider.value = divisions;
+        }
+        redPiecesValueSpan.textContent = redPiecesSlider.value;
+      }
+
+      // Eventos para mantener la coherencia entre los deslizadores
+      divisionsSlider.addEventListener('input', function(){
+        divisionsValueSpan.textContent = divisionsSlider.value;
+        updateRedPiecesSlider();
+        drawCircle();
+      });
+
+      redPiecesSlider.addEventListener('input', function(){
+        redPiecesValueSpan.textContent = redPiecesSlider.value;
+        drawCircle();
+      });
+
+      // Dibuja la visualización inicial
+      drawCircle();
+    </script>
+  </body>
+</html>
