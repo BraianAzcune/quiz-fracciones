@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ejemplo fraccionPie</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+      }
+      .pairs-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 20px;
+      }
+
+      .pair {
+        flex: 1 1 calc(25% - 40px);
+        box-sizing: border-box;
+        min-width: 220px;
+      }
+      .fraction {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .fraction .numerator,
+      .fraction .denominator {
+        display: block;
+        font-size: 1.5em;
+      }
+      .fraction .fraction-line {
+        border-top: 2px solid #000;
+        width: 50px;
+        margin: auto;
+        padding-top: 1px;
+        padding-bottom: 1px;
+      }
+      .circle-wrapper {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 20px auto;
+        display: inline-block;
+      }
+      canvas {
+        border: 1px solid #ccc;
+        margin-top: 20px;
+      }
+      button {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Contenedor general donde se inyectarán los pares (fracción + círculo) -->
+    <div id="pairsContainer" class="pairs-container"></div>
+
+    <script type="module">
+      import { fraccionPie } from "./fraccionPieComponent.js";
+
+
+
+      fraccionPie("pairsContainer", 1, 3);
+      fraccionPie("pairsContainer", 1, 2);
+      fraccionPie("pairsContainer", 5, 7);
+      fraccionPie("pairsContainer", 2, 3);
+      fraccionPie("pairsContainer", 8, 10);
+      fraccionPie("pairsContainer", 4, 4);
+      fraccionPie("pairsContainer", 2, 2);
+      fraccionPie("pairsContainer", 6, 9);
+      
+
+    </script>
+  </body>
+</html>
